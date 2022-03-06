@@ -18,7 +18,7 @@
     lat: 0,
     lng: 0,
     zoom: 4,
-    style: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+    style: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
   }
 
   function setup(){
