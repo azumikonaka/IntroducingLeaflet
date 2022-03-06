@@ -32,7 +32,7 @@
     // Only redraw the meteorites when the map change and not every frame.
     myMap.onChange(drawMeteorites);
 
-    fill(70, 203,31);
+    fill(255, 0, 31);
     stroke(100);
   }
 
