@@ -15,9 +15,9 @@
 
   // Lets change the map tiles to something with more contrast
   const options = {
-    lat: 0,
-    lng: 0,
-    zoom: 4,
+    lat: 49.2606,
+    lng: -123.24,
+    zoom: 2.5,
     style: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
   }
 
