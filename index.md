@@ -1,37 +1,71 @@
-## Welcome to GitHub Pages
+<!DOCTYPE html>
+<html lang="en">
 
-You can use the [editor on GitHub](https://github.com/azumikonaka/IntroducingLeaflet/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+<head>
+  <title>Basic Mappa Tutorial</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.min.js" type="text/javascript"></script>
+  <script src="https://unpkg.com/mappa-mundi/dist/mappa.js" type="text/javascript"></script>
+</head>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<body>
+  <script>
+  let myMap;
+  let canvas;
+  const mappa = new Mappa('Leaflet');
 
-### Markdown
+  // Lets change the map tiles to something with more contrast
+  const options = {
+    lat: 0,
+    lng: 0,
+    zoom: 4,
+    style: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+  }
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+  function setup(){
+    canvas = createCanvas(640,640);
+    myMap = mappa.tileMap(options);
+    myMap.overlay(canvas)
 
-```markdown
-Syntax highlighted code block
+    // Load the data
+    meteorites = loadTable('Meteorite_Landings.csv', 'csv', 'header');
 
-# Header 1
-## Header 2
-### Header 3
+    // Only redraw the meteorites when the map change and not every frame.
+    myMap.onChange(drawMeteorites);
 
-- Bulleted
-- List
+    fill(70, 203,31);
+    stroke(100);
+  }
 
-1. Numbered
-2. List
+  function draw(){
+  }
 
-**Bold** and _Italic_ and `Code` text
+  // Draw the meteorites
+  function drawMeteorites() {
+    // Clear the canvas
+    clear();
 
-[Link](url) and ![Image](src)
-```
+    for (let i = 0; i < meteorites.getRowCount(); i++) {
+      // Get the lat/lng of each meteorite
+      const latitude = Number(meteorites.getString(i, 'reclat'));
+      const longitude = Number(meteorites.getString(i, 'reclong'));
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+      // Only draw them if the position is inside the current map bounds. We use a
+      // Leaflet method to check if the lat and lng are contain inside the current
+      // map. This way we draw just what we are going to see and not everything. See
+      // getBounds() in http://leafletjs.com/reference-1.1.0.html
+      if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+        // Transform lat/lng to pixel position
+        const pos = myMap.latLngToPixel(latitude, longitude);
+        // Get the size of the meteorite and map it. 60000000 is the mass of the largest
+        // meteorite (https://en.wikipedia.org/wiki/Hoba_meteorite)
+        let size = meteorites.getString(i, 'mass (g)');
+        size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
+        ellipse(pos.x, pos.y, size, size);
+      }
+    }
+  }
 
-### Jekyll Themes
+  </script>
+</body>
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/azumikonaka/IntroducingLeaflet/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+</html>
