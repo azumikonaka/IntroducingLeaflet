@@ -60,7 +60,7 @@
         // meteorite (https://en.wikipedia.org/wiki/Hoba_meteorite)
         let size = meteorites.getString(i, 'mass (g)');
         size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
-        ellipse(pos.x, pos.y, size, size);
+        star(pos.x, pos.y, size, size, 7);
       }
     }
   }
